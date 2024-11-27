@@ -1,7 +1,7 @@
 let score = 0;
-let autoclickerBought = false;
+let autoclickerLevel = 0; // Уровень автокликера
+let autoclickerPrice = 100; // Начальная цена улучшения
 let autoclickerInterval;
-let autoclickerPrice = 100; // Переменная для хранения цены автокликера
 
 // Получаем элементы из DOM
 const scoreElement = document.getElementById("score");
@@ -14,16 +14,15 @@ const consoleOutput = document.getElementById("consoleOutput");
 // Загружаем сохраненные данные из Local Storage
 function loadGame() {
     const savedScore = localStorage.getItem("score");
-    const savedAutoclicker = localStorage.getItem("autoclickerBought");
+    const savedLevel = localStorage.getItem("autoclickerLevel");
 
     if (savedScore) {
         score = parseInt(savedScore);
     }
 
-    if (savedAutoclicker === "true") {
-        autoclickerBought = true;
-        autoclickerButton.disabled = true; // Отключаем кнопку после покупки
-        autoclickerButton.innerText = 'Автокликер куплен!'; // Изменяем текст на кнопке
+    if (savedLevel) {
+        autoclickerLevel = parseInt(savedLevel);
+        updateAutoclickerButton(); // Обновляем состояние кнопки автокликера
         startAutoclicker(); // Запускаем автокликер
     }
 
@@ -33,7 +32,7 @@ function loadGame() {
 // Сохраняем данные в Local Storage
 function saveGame() {
     localStorage.setItem("score", score);
-    localStorage.setItem("autoclickerBought", autoclickerBought);
+    localStorage.setItem("autoclickerLevel", autoclickerLevel);
 }
 
 // Обработчик события для кнопки "Кликнуть!"
@@ -43,30 +42,63 @@ clickButton.addEventListener("click", function() {
     saveGame(); // Сохраняем данные
 });
 
+// Функция для обновления текста кнопки автокликера
+function updateAutoclickerButton() {
+    if (autoclickerLevel < 10) {
+        autoclickerPrice = getNextPrice(autoclickerLevel); // Получаем цену для следующего уровня
+        autoclickerButton.innerText = `Улучшить автокликер до уровня ${autoclickerLevel + 1} (${autoclickerPrice} очков)`;
+    } else {
+        autoclickerButton.disabled = true; // Отключаем кнопку после 10 уровня
+        autoclickerButton.innerText = 'Максимальный уровень автокликера достигнут!';
+    }
+}
+
+// Функция для получения цены следующего уровня
+function getNextPrice(level) {
+    switch (level) {
+        case 0: return 100;
+        case 1: return 200;
+        case 2: return 500;
+        case 3: return 1000;
+        case 4: return 2000;
+        case 5: return 4000;
+        case 6: return 7500;
+        case 7: return 12000;
+        case 8: return 20000;
+        case 9: return 50000;
+        default: return Infinity; // Если уровень больше 9, цена бесконечная
+    }
+}
+
 // Обработчик события для кнопки "Купить автокликер"
 autoclickerButton.addEventListener("click", function() {
-    if (score >= autoclickerPrice && !autoclickerBought) {
+    if (score >= autoclickerPrice && autoclickerLevel < 10) {
         score -= autoclickerPrice; // Уменьшаем счет на цену автокликера
         scoreElement.innerText = score; // Обновляем отображение счета
-        autoclickerBought = true; // Устанавливаем флаг, что автокликер куплен
-        autoclickerButton.disabled = true; // Отключаем кнопку после покупки
-        autoclickerButton.innerText = 'Автокликер куплен!'; // Изменяем текст на кнопке
-        startAutoclicker(); // Запускаем автокликер
+        autoclickerLevel++; // Увеличиваем уровень автокликера
+        updateAutoclickerButton(); // Обновляем состояние кнопки
         saveGame(); // Сохраняем данные
-    } else if (autoclickerBought) {
-        alert('Автокликер уже приобретен!');
+        restartAutoclicker(); // Перезапускаем автокликер с новым уровнем
+    } else if (autoclickerLevel >= 10) {
+        alert('Максимальный уровень автокликера достигнут!');
     } else {
-        alert('Недостаточно очков для покупки автокликера!');
+        alert('Недостаточно очков для улучшения автокликера!');
     }
 });
 
 // Функция для старта автокликера
 function startAutoclicker() {
     autoclickerInterval = setInterval(function() {
-        score++; // Увеличиваем счет каждую секунду
+        score += autoclickerLevel; // Увеличиваем счет на уровень автокликера
         scoreElement.innerText = score; // Обновляем отображение счета
         saveGame(); // Сохраняем данные
     }, 1000); // Каждые 1000 миллисекунд (1 секунда)
+}
+
+// Функция для перезапуска автокликера
+function restartAutoclicker() {
+    clearInterval(autoclickerInterval); // Останавливаем текущий автокликер
+    startAutoclicker(); // Запускаем новый автокликер
 }
 
 // Обработчик события для консольной команды
@@ -76,9 +108,9 @@ consoleButton.addEventListener("click", function() {
 
     if (command.toLowerCase() === 'reset') {
         score = 0;
-        autoclickerBought = false;
+        autoclickerLevel = 0;
         autoclickerButton.disabled = false; // Включаем кнопку для покупки
-        autoclickerButton.innerText = `Купить автокликер (${autoclickerPrice} очков)`; // Сбрасываем текст на кнопке
+        updateAutoclickerButton(); // Обновляем текст на кнопке
         clearInterval(autoclickerInterval); // Останавливаем автокликер, если он работает
         consoleOutput.innerText = 'Игра сброшена!';
         document.getElementById('score').innerText = score; // Обновляем текст очков на экране
