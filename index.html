@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Недо кликер</title>
+    <title>Недо-кликер</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Недо кликер</h1>
-        <h4>v0.1.7</h4>
+        <h1>Недо-кликер</h1>
+        <h4>v0.1.8</h4>
         <button id="clickButton">Кликнуть!</button>
         <p>Очки: <span id="score">0</span></p>
         <button id="autoclickerButton">Купить автокликер (50 очков)</button>
-        <script src="script.js"></script>
+
+        <!-- Консоль -->
+        <div>
+            <h3>Консоль</h3>
+            <input type="text" id="consoleInput" placeholder="Введите команду..." />
+            <button id="consoleButton">Отправить</button>
+            <p id="consoleOutput"></p>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
