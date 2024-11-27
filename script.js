@@ -84,7 +84,7 @@ consoleButton.addEventListener("click", function() {
         document.getElementById('score').innerText = score; // Обновляем текст очков на экране
         saveGame(); // Сохраняем данные
         
-    } else if (command.startsWith('set ')) {
+    } else if (command.toLowerCase().startsWith('set ')) {
         const value = parseInt(command.split(' ')[1]);
         if (!isNaN(value)) {
             score = value;
@@ -96,7 +96,14 @@ consoleButton.addEventListener("click", function() {
         }
         
     } else if (command.toLowerCase() === 'help') {
-        consoleOutput.innerHTML = 'Команды есть такие:<br>set [число]<br>reset';
+        consoleOutput.innerHTML = `
+            Команды есть такие:
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li>help]</li>
+                <li>set [число]</li>
+                <li>reset</li>
+            </ul>
+        `;
     } else {
         consoleOutput.innerText = 'Ошибка! Такой команды нет(';
     }
