@@ -15,11 +15,17 @@ clickButton.addEventListener("click", function() {
 
 // Обработчик события для кнопки "Купить автокликер"
 autoclickerButton.addEventListener("click", function() {
-    if (score >= 500 && !autoclickerBought) {
-        score -= 500; // Уменьшаем счет на 500
+    if (score >= 50 && !autoclickerBought) {
+        score -= 50; // Уменьшаем счет на 50
         scoreElement.innerText = score; // Обновляем отображение счета
         autoclickerBought = true; // Устанавливаем флаг, что автокликер куплен
+        autoclickerButton.disabled = true; // Отключаем кнопку после покупки
+        autoclickerButton.innerText = 'Автокликер куплен!'; // Изменяем текст на кнопке
         startAutoclicker(); // Запускаем автокликер
+    } else if (autoclickerBought) {
+        alert('Автокликер уже приобретен!');
+    } else {
+        alert('Недостаточно очков для покупки автокликера!');
     }
 });
 
