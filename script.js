@@ -44,8 +44,8 @@ clickButton.addEventListener("click", function() {
 
 // Обработчик события для кнопки "Купить автокликер"
 autoclickerButton.addEventListener("click", function() {
-    if (score >= 50 && !autoclickerBought) {
-        score -= 50; // Уменьшаем счет на 50
+    if (score >= 100 && !autoclickerBought) {
+        score -= 100; // Уменьшаем счет на 100
         scoreElement.innerText = score; // Обновляем отображение счета
         autoclickerBought = true; // Устанавливаем флаг, что автокликер куплен
         autoclickerButton.disabled = true; // Отключаем кнопку после покупки
@@ -73,15 +73,16 @@ consoleButton.addEventListener("click", function() {
     const command = consoleInput.value.trim(); // Получаем команду
     consoleInput.value = ''; // Очищаем поле ввода
 
-    if (command === 'reset') {
+    if (command.toLowerCase() === 'reset') {
         score = 0;
         autoclickerBought = false;
         autoclickerButton.disabled = false; // Включаем кнопку для покупки
-        autoclickerButton.innerText = 'Купить автокликер (50 очков)'; // Сбрасываем текст на кнопке
+        autoclickerButton.innerText = 'Купить автокликер (100 очков)'; // Сбрасываем текст на кнопке
         clearInterval(autoclickerInterval); // Останавливаем автокликер, если он работает
         consoleOutput.innerText = 'Игра сброшена!';
         document.getElementById('score').innerText = score; // Обновляем текст очков на экране
         saveGame(); // Сохраняем данные
+        
     } else if (command.startsWith('set ')) {
         const value = parseInt(command.split(' ')[1]);
         if (!isNaN(value)) {
@@ -92,7 +93,8 @@ consoleButton.addEventListener("click", function() {
         } else {
             consoleOutput.innerText = 'Ошибка! введите корректное число.';
         }
-    } else if (command === 'help') {
+        
+    } else if (command.toLowerCase() === 'help') {
         consoleOutput.innerHTML = 'Команды есть такие:<br>set [число]<br>reset';
     } else {
         consoleOutput.innerText = 'Ошибка! Такой команды нет(';
