@@ -80,6 +80,7 @@ consoleButton.addEventListener("click", function() {
         autoclickerButton.innerText = 'Купить автокликер (50 очков)'; // Сбрасываем текст на кнопке
         clearInterval(autoclickerInterval); // Останавливаем автокликер, если он работает
         consoleOutput.innerText = 'Игра сброшена!';
+        document.getElementById('score').innerText = score; // Обновляем текст очков на экране
         saveGame(); // Сохраняем данные
     } else if (command.startsWith('set ')) {
         const value = parseInt(command.split(' ')[1]);
@@ -89,10 +90,12 @@ consoleButton.addEventListener("click", function() {
             saveGame(); // Сохраняем данные
             consoleOutput.innerText = `Очки установлены на ${value}!`;
         } else {
-            consoleOutput.innerText = 'Ошибка: введите корректное число.';
+            consoleOutput.innerText = 'Ошибка! введите корректное число.';
         }
+    } else if (command === 'help') {
+        consoleOutput.innerText = 'Команды есть такие:<br>set [число]<br>reset';
     } else {
-        consoleOutput.innerText = 'Ошибка: нераспознанная команда.';
+        consoleOutput.innerText = 'Ошибка! Такой команды нет(';
     }
 });
 
