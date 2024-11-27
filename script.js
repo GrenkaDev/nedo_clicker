@@ -98,11 +98,13 @@ consoleButton.addEventListener("click", function() {
     } else if (command.toLowerCase() === 'help') {
         consoleOutput.innerHTML = `
             Команды есть такие:
-            <ul style="list-style-type: none; padding-left: 0; margin: 0;">
-                <li>help</li>
-                <li>set [число]</li>
-                <li>reset</li>
-            </ul>
+            <div id="consoleOutput" style="text-align: left;">
+                <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+                    <li>help</li>
+                    <li>set [число]</li>
+                    <li>reset</li>
+                </ul>
+            </div>
         `;
     } else {
         consoleOutput.innerText = 'Ошибка! Такой команды нет(';
