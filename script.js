@@ -60,12 +60,12 @@ function getNextPrice(level) {
         case 1: return 200;
         case 2: return 500;
         case 3: return 1000;
-        case 4: return 2000;
-        case 5: return 4000;
-        case 6: return 7500;
-        case 7: return 12000;
-        case 8: return 20000;
-        case 9: return 50000;
+        case 4: return 1500;
+        case 5: return 2000;
+        case 6: return 2500;
+        case 7: return 3000;
+        case 8: return 3500;
+        case 9: return 4000;
         default: return Infinity; // Если уровень больше 9, цена бесконечная
     }
 }
