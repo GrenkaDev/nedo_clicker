@@ -99,7 +99,7 @@ consoleButton.addEventListener("click", function() {
         consoleOutput.innerHTML = `
             Команды есть такие:
             <ul style="list-style-type: none; padding-left: 0;">
-                <li>help]</li>
+                <li>help</li>
                 <li>set [число]</li>
                 <li>reset</li>
             </ul>
