@@ -1,6 +1,7 @@
 let score = 0;
 let autoclickerBought = false;
 let autoclickerInterval;
+let autoclickerPrice = 100; // Переменная для хранения цены автокликера
 
 // Получаем элементы из DOM
 const scoreElement = document.getElementById("score");
@@ -44,8 +45,8 @@ clickButton.addEventListener("click", function() {
 
 // Обработчик события для кнопки "Купить автокликер"
 autoclickerButton.addEventListener("click", function() {
-    if (score >= 100 && !autoclickerBought) {
-        score -= 100; // Уменьшаем счет на 100
+    if (score >= autoclickerPrice && !autoclickerBought) {
+        score -= autoclickerPrice; // Уменьшаем счет на цену автокликера
         scoreElement.innerText = score; // Обновляем отображение счета
         autoclickerBought = true; // Устанавливаем флаг, что автокликер куплен
         autoclickerButton.disabled = true; // Отключаем кнопку после покупки
@@ -77,7 +78,7 @@ consoleButton.addEventListener("click", function() {
         score = 0;
         autoclickerBought = false;
         autoclickerButton.disabled = false; // Включаем кнопку для покупки
-        autoclickerButton.innerText = 'Купить автокликер (100 очков)'; // Сбрасываем текст на кнопке
+        autoclickerButton.innerText = `Купить автокликер (${autoclickerPrice} очков)`; // Сбрасываем текст на кнопке
         clearInterval(autoclickerInterval); // Останавливаем автокликер, если он работает
         consoleOutput.innerText = 'Игра сброшена!';
         document.getElementById('score').innerText = score; // Обновляем текст очков на экране
@@ -91,7 +92,7 @@ consoleButton.addEventListener("click", function() {
             saveGame(); // Сохраняем данные
             consoleOutput.innerText = `Очки установлены на ${value}!`;
         } else {
-            consoleOutput.innerText = 'Ошибка! введите корректное число.';
+            consoleOutput.innerText = 'Ошибка! Введите корректное число.';
         }
         
     } else if (command.toLowerCase() === 'help') {
