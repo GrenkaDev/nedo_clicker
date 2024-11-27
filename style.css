@@ -1,6 +1,7 @@
 body {
     font-family: 'Consolas', 'Courier New', monospace; /* Устанавливаем шрифт Consolas */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -34,4 +35,11 @@ button:hover {
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+footer {
+    text-align: center; /* Центрируем текст в футере */
+    margin-top: 20px; /* Отступ от контейнера */
+    font-size: 14px; /* Размер шрифта для информации */
+    color: #555; /* Цвет текста */
 }
