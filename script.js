@@ -93,7 +93,7 @@ consoleButton.addEventListener("click", function() {
             consoleOutput.innerText = 'Ошибка! введите корректное число.';
         }
     } else if (command === 'help') {
-        consoleOutput.innerText = 'Команды есть такие:<br>set [число]<br>reset';
+        consoleOutput.innerHTML = 'Команды есть такие:<br>set [число]<br>reset';
     } else {
         consoleOutput.innerText = 'Ошибка! Такой команды нет(';
     }
