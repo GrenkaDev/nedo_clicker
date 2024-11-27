@@ -12,7 +12,7 @@ function loadGame() {
     const savedScore = localStorage.getItem("score");
     const savedAutoclicker = localStorage.getItem("autoclickerBought");
 
-    if (savedScore !== null) {
+    if (savedScore) {
         score = parseInt(savedScore);
     }
 
