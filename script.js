@@ -112,7 +112,7 @@ consoleButton.addEventListener("click", function() {
         autoclickerButton.disabled = false; // Включаем кнопку для покупки
         updateAutoclickerButton(); // Обновляем текст на кнопке
         clearInterval(autoclickerInterval); // Останавливаем автокликер, если он работает
-        consoleOutput.innerText = 'Игра сброшена!';
+        consoleOutput.innerText = '>>Прогресс сброшен';
         document.getElementById('score').innerText = score; // Обновляем текст очков на экране
         saveGame(); // Сохраняем данные
         
@@ -122,14 +122,14 @@ consoleButton.addEventListener("click", function() {
             score = value;
             scoreElement.innerText = score; // Обновляем отображение счета
             saveGame(); // Сохраняем данные
-            consoleOutput.innerText = `Очки установлены на ${value}!`;
+            consoleOutput.innerText = `>>Очков теперь ${value}!`;
         } else {
             consoleOutput.innerText = 'Ошибка! Введите корректное число.';
         }
         
     } else if (command.toLowerCase() === 'help') {
         consoleOutput.innerHTML = `
-            Команды есть такие:
+            >>Команды есть такие:
             <div id="consoleOutput" style="text-align: left;">
                 <ul style="list-style-type: none; padding-left: 0; margin: 0;">
                     <li>help</li>
