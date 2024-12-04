@@ -23,14 +23,14 @@
             border: 2px solid #4CAF50;
             position: relative;
             overflow: hidden;
+            background-color: #e0e0e0; /* Цвет игрового поля */
         }
 
         #runner {
-            width: 50px;
-            height: 50px;
-            background-color: #4CAF50;
             position: absolute;
             bottom: 0;
+            font-size: 50px; /* Убираем квадрат и задаем размер шрифта для буквы */
+            color: #4CAF50; /* Цвет буквы */
         }
 
         #score {
@@ -109,6 +109,7 @@
         let score = 0; 
         let highScore = localStorage.getItem('highScore') || 0; 
         let isJumping = false; 
+        let gameOver = false;
         const runner = document.getElementById('runner');
         const gameArea = document.getElementById('gameArea');
         const scoreElement = document.getElementById('score');
@@ -120,19 +121,23 @@
         highScoreElement.innerText = `Максимальный рекорд: ${highScore}`;
 
         function jump() {
-            if (isJumping) return;
+            if (isJumping || gameOver) return;
             isJumping = true;
-            let jumpHeight = 100;
-            let jumpInterval = setInterval(() => {
-                if (jumpHeight >= 0) {
+            let jumpHeight = 0;
+            const jumpLimit = 100; // Максимальная высота прыжка
+            
+            // Поднимаем игрока
+            const jumpInterval = setInterval(() => {
+                if (jumpHeight < jumpLimit) {
                     runner.style.bottom = `${jumpHeight}px`;
-                    jumpHeight -= 5; // Высота прыжка
+                    jumpHeight += 5; // Высота прыжка
                 } else {
                     clearInterval(jumpInterval);
-                    let fallInterval = setInterval(() => {
-                        if (jumpHeight < 100) {
+                    // Падение игрока
+                    const fallInterval = setInterval(() => {
+                        if (jumpHeight > 0) {
+                            jumpHeight -= 5; // Высота падения
                             runner.style.bottom = `${jumpHeight}px`;
-                            jumpHeight += 5; // Падение
                         } else {
                             clearInterval(fallInterval);
                             isJumping = false; // Восстановление состояния прыжка
@@ -143,6 +148,8 @@
         }
 
         function gameLoop() {
+            if (gameOver) return; // Если игра окончена, не запускаем новую логику
+
             const randomObstacle = document.createElement('div');
             randomObstacle.style.width = '30px';
             randomObstacle.style.height = '30px';
@@ -150,22 +157,30 @@
             randomObstacle.style.position = 'absolute';
             randomObstacle.style.right = '0';
             randomObstacle.style.bottom = '0';
-            gameArea.appendChild(randomObstacle);
-            randomObstacle.style.transition = 'right 2s linear';
-
-            setTimeout(() => {
-                randomObstacle.style.right = '100%';
-            }, 100);
-
-            setTimeout(() => {
-                randomObstacle.remove();
-                if (!isJumping && parseInt(runner.style.bottom) < 50) {
-                    score = Math.max(0, score - 1); // Понижение очков
+            gameArea.appendChild(randomObstacle); // Добавление препятствия
+    
+            // Двигаем препятствие влево
+            let obstacleInterval = setInterval(() => {
+                const obstaclePosition = parseInt(randomObstacle.style.right); // Позиция препятствия
+                if (obstaclePosition > gameArea.offsetWidth) {
+                    clearInterval(obstacleInterval); // Убираем препятствие, если оно вышло за границы
+                    randomObstacle.remove(); // Удаляем препятствие
                 } else {
-                    score++; // Получаем 1 очко, если не столкнулись с препятствием
+                    randomObstacle.style.right = `${obstaclePosition + 5}px`; // Двигаем препятствие
                 }
-                scoreElement.innerText = `Очки: ${score}`;
-            }, 3000);
+
+                // Проверяем столкновение
+                if (obstaclePosition < 50 && obstaclePosition > 0 && !isJumping) {
+                    gameOver = true; // Устанавливаем игровой конец
+                    clearInterval(obstacleInterval); // Остановка движения препятствия
+                    clearInterval(gameCycle); // Остановить основной игровой цикл
+                    alert('Игра окончена!'); // Уведомление о гейм овер
+                }
+            }, 20);
+            
+            // Обновляем счет
+            score++;
+            scoreElement.innerText = `Очки: ${score}`;
         }
 
         document.getElementById('backButton').addEventListener('click', () => {
@@ -178,11 +193,16 @@
                 alert('Пожалуйста, выберите букву для игры.');
                 return;
             }
+
+            runner.innerText = letterValue; // Задаем букву как игрока
             score = 0; // Сброс очков
             scoreElement.innerText = `Очки: ${score}`;
+            gameOver = false; // Сброс состояния игры
             startButton.disabled = true; // Отключаем кнопку во время игры
             letterSelect.disabled = true; // Отключаем выбор буквы
-            setInterval(gameLoop, 2000); // Запуск цикла игры каждые 2 секунды
+            
+            // Запустить игровой цикл
+            gameCycle = setInterval(gameLoop, 2000); // Период игрового цикла
         });
 
         document.addEventListener('keydown', (event) => {
