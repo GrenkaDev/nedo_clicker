@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Раннер</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Простейшие стили для ранера */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        #gameArea {
+            width: 80%;
+            height: 400px;
+            border: 2px solid #4CAF50;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #runner {
+            width: 50px;
+            height: 50px;
+            background-color: #4CAF50;
+            position: absolute;
+            bottom: 0;
+        }
+
+        #score {
+            font-size: 20px;
+            margin: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="runner"></div>
+    </div>
+    <p id="score">Очки: 0</p>
+    <button class="button" id="backButton">Обратно к кликеру</button>
+
+    <script>
+        let score = 0; 
+        let isJumping = false; 
+        const runner = document.getElementById('runner');
+        const gameArea = document.getElementById('gameArea');
+
+        function jump() {
+            if (isJumping) return;
+            isJumping = true;
+            let jumpHeight = 100;
+            let jumpInterval = setInterval(() => {
+                if (jumpHeight >= 0) {
+                    runner.style.bottom = `${jumpHeight}px`;
+                    jumpHeight -= 5; // Высота прыжка
+                } else {
+                    clearInterval(jumpInterval);
+                    let fallInterval = setInterval(() => {
+                        if (jumpHeight < 100) {
+                            runner.style.bottom = `${jumpHeight}px`;
+                            jumpHeight += 5; // Падение
+                        } else {
+                            clearInterval(fallInterval);
+                            isJumping = false; // Восстановление состояния прыжка
+                        }
+                    }, 20);
+                }
+            }, 20);
+        }
+
+        function gameLoop() {
+            const randomObstacle = document.createElement('div');
+            randomObstacle.style.width = '30px';
+            randomObstacle.style.height = '30px';
+            randomObstacle.style.backgroundColor = 'red';
+            randomObstacle.style.position = 'absolute';
+            randomObstacle.style.right = '0';
+            randomObstacle.style.bottom = '0';
+            gameArea.appendChild(randomObstacle);
+            randomObstacle.style.transition = 'right 2s linear';
+
+            setTimeout(() => {
+                randomObstacle.style.right = '100%';
+            }, 100);
+
+            setTimeout(() => {
+                randomObstacle.remove();
+                if (!isJumping && parseInt(runner.style.bottom) < 50) {
+                    score = Math.max(0, score - 1); // Понижение очков
+                } else {
+                    score++; // Получаем 1 очко, если не столкнулись с препятствием
+                }
+                document.getElementById('score').innerText = `Очки: ${score}`;
+            }, 3000);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                jump();
+            }
+        });
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            window.location.href = 'index.html'; // Вернуться на кликер
+        });
+
+        setInterval(gameLoop, 2000); // Запуск цикла игры каждые 2 секунды
+    </script>
+</body>
+</html>
