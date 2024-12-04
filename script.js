@@ -43,10 +43,14 @@ function toggleTheme() {
     if (isDarkTheme) {
         document.body.classList.remove('light-theme');
         document.body.classList.add('dark-theme');
+        document.querySelector('.container').classList.add('dark');
+        document.querySelector('.console').classList.add('dark');
         document.getElementById('themeToggle').innerText = '☀️'; // Заменяем эмодзи на солнце
     } else {
         document.body.classList.remove('dark-theme');
         document.body.classList.add('light-theme');
+        document.querySelector('.container').classList.remove('dark');
+        document.querySelector('.console').classList.remove('dark');
         document.getElementById('themeToggle').innerText = '🌙'; // Возвращаем эмодзи луны
     }
 
@@ -59,10 +63,14 @@ function loadTheme() {
     if (savedTheme === 'dark') {
         isDarkTheme = true;
         document.body.classList.add('dark-theme');
+        document.querySelector('.container').classList.add('dark');
+        document.querySelector('.console').classList.add('dark');
         document.getElementById('themeToggle').innerText = '☀️'; // Эмодзи солнца для темной темы
     } else {
         isDarkTheme = false;
         document.body.classList.add('light-theme');
+        document.querySelector('.container').classList.remove('dark');
+        document.querySelector('.console').classList.remove('dark');
         document.getElementById('themeToggle').innerText = '🌙'; // Эмодзи луны для светлой темы
     }
 }
