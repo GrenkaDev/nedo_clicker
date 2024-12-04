@@ -194,3 +194,9 @@ loadTheme();
 
 // Обработчик события для кнопки смены темы
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+const runButton = document.getElementById("runButton");
+
+runButton.addEventListener("click", function() {
+    window.location.href = "runner.html"; // Переход на страницу ранера
+});
