@@ -9,6 +9,16 @@ body {
     background-color: #f4f4f4;
 }
 
+body.light-theme {
+    background-color: #f4f4f4;
+    color: #000;
+}
+
+body.dark-theme {
+    background-color: #333;
+    color: #fff;
+}
+
 .container {
     text-align: center;
     background-color: #fff;
@@ -35,6 +45,18 @@ button:hover {
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: transparent; /* Без фона для кнопки */
+    border: none;
+    z-index: 1000; /* Чтобы кнопка была поверх других элементов */
 }
 
 footer {
