@@ -103,6 +103,7 @@
         </select>
     </div>
     <button class="button" id="startButton">Начать игру</button>
+    <button class="button" id="restartButton" style="display: none;">Рестарт игры</button>
     <button class="button" id="backButton">Обратно к кликеру</button>
 
     <script>
@@ -110,11 +111,13 @@
         let highScore = localStorage.getItem('highScore') || 0; 
         let isJumping = false; 
         let gameOver = false;
+        let obstacleInterval;
         const runner = document.getElementById('runner');
         const gameArea = document.getElementById('gameArea');
         const scoreElement = document.getElementById('score');
         const highScoreElement = document.getElementById('highScore');
         const startButton = document.getElementById('startButton');
+        const restartButton = document.getElementById('restartButton');
         const letterSelect = document.getElementById('letter');
 
         // Обновление отображения максимального рекорда
@@ -147,9 +150,7 @@
             }, 20);
         }
 
-        function gameLoop() {
-            if (gameOver) return; // Если игра окончена, не запускаем новую логику
-
+        function createObstacle() {
             const randomObstacle = document.createElement('div');
             randomObstacle.style.width = '30px';
             randomObstacle.style.height = '30px';
@@ -158,29 +159,28 @@
             randomObstacle.style.right = '0';
             randomObstacle.style.bottom = '0';
             gameArea.appendChild(randomObstacle); // Добавление препятствия
-    
+
             // Двигаем препятствие влево
-            let obstacleInterval = setInterval(() => {
+            const moveObstacleInterval = setInterval(() => {
                 const obstaclePosition = parseInt(randomObstacle.style.right); // Позиция препятствия
-                if (obstaclePosition > gameArea.offsetWidth) {
-                    clearInterval(obstacleInterval); // Убираем препятствие, если оно вышло за границы
-                    randomObstacle.remove(); // Удаляем препятствие
-                } else {
-                    randomObstacle.style.right = `${obstaclePosition + 5}px`; // Двигаем препятствие
-                }
+                randomObstacle.style.right = `${obstaclePosition + 5}px`; // Двигаем препятствие
 
                 // Проверяем столкновение
-                if (obstaclePosition < 50 && obstaclePosition > 0 && !isJumping) {
+                const runnerBottom = parseInt(runner.style.bottom);
+                if (obstaclePosition > gameArea.offsetWidth - 50 && runnerBottom <= 30) {
                     gameOver = true; // Устанавливаем игровой конец
-                    clearInterval(obstacleInterval); // Остановка движения препятствия
-                    clearInterval(gameCycle); // Остановить основной игровой цикл
+                    clearInterval(moveObstacleInterval); // Остановка движения препятствия
                     alert('Игра окончена!'); // Уведомление о гейм овер
+                    clearInterval(obstacleInterval); // Останавливаем цикл создания препятствий
+                    restartButton.style.display = 'block'; // Показать кнопку рестарта
+                    return;
+                }
+
+                if (obstaclePosition > gameArea.offsetWidth) {
+                    clearInterval(moveObstacleInterval); // Если препятствие вышло за границы
+                    randomObstacle.remove(); // Удаляем препятствие
                 }
             }, 20);
-            
-            // Обновляем счет
-            score++;
-            scoreElement.innerText = `Очки: ${score}`;
         }
 
         document.getElementById('backButton').addEventListener('click', () => {
@@ -198,17 +198,40 @@
             score = 0; // Сброс очков
             scoreElement.innerText = `Очки: ${score}`;
             gameOver = false; // Сброс состояния игры
-            startButton.disabled = true; // Отключаем кнопку во время игры
+            startButton.style.display = 'none'; // Отключаем кнопку старт
             letterSelect.disabled = true; // Отключаем выбор буквы
-            
+
             // Запустить игровой цикл
-            gameCycle = setInterval(gameLoop, 2000); // Период игрового цикла
+            obstacleInterval = setInterval(() => {
+                createObstacle();
+                score++; // Увеличиваем счет на 1 за каждое препятствие
+                scoreElement.innerText = `Очки: ${score}`;
+            }, 2000); // Каждые 2 секунды
         });
 
         document.addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
                 jump();
             }
+        });
+
+        restartButton.addEventListener('click', () => {
+            // Сбрасываем состояние игры
+            gameOver = false;
+            score = 0;
+            scoreElement.innerText = `Очки: ${score}`;
+            runner.style.bottom = '0px'; // Сбрасываем позицию персонажа
+            runner.innerText = letterSelect.value; // Сбрасываем букву в процессе перезапуска
+            restartButton.style.display = 'none'; // Прячем кнопку рестарта
+            startButton.style.display = 'none'; // Скрываем кнопку старта
+            letterSelect.disabled = true; // Запрет выбора буквы во время перезапуска
+
+            // Запустить игровой цикл
+            obstacleInterval = setInterval(() => {
+                createObstacle();
+                score++; // Увеличиваем счет на 1 за каждое препятствие
+                scoreElement.innerText = `Очки: ${score}`;
+            }, 2000); // Каждые 2 секунды
         });
 
         // Загрузка максимального рекорда
