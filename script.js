@@ -2,6 +2,7 @@ let score = 0;
 let autoclickerLevel = 0; // Уровень автокликера
 let autoclickerPrice = 100; // Начальная цена улучшения
 let autoclickerInterval;
+let isDarkTheme = false; // Переменная для отслеживания текущей темы
 
 // Получаем элементы из DOM
 const scoreElement = document.getElementById("score");
@@ -33,6 +34,42 @@ function loadGame() {
 function saveGame() {
     localStorage.setItem("score", score);
     localStorage.setItem("autoclickerLevel", autoclickerLevel);
+}
+
+// Функция для обновления темы
+function toggleTheme() {
+    isDarkTheme = !isDarkTheme; // Меняем состояние темы
+
+    if (isDarkTheme) {
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('dark-theme');
+        document.getElementById('themeToggle').innerText = '☀️'; // Заменяем эмодзи на солнце
+    } else {
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
+        document.getElementById('themeToggle').innerText = '🌙'; // Возвращаем эмодзи луны
+    }
+
+    saveTheme(); // Сохраняем выбор темы в localStorage
+}
+
+// Загружаем сохраненную тему из Local Storage
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        isDarkTheme = true;
+        document.body.classList.add('dark-theme');
+        document.getElementById('themeToggle').innerText = '☀️'; // Эмодзи солнца для темной темы
+    } else {
+        isDarkTheme = false;
+        document.body.classList.add('light-theme');
+        document.getElementById('themeToggle').innerText = '🌙'; // Эмодзи луны для светлой темы
+    }
+}
+
+// Сохраняем выбранную тему в Local Storage
+function saveTheme() {
+    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
 }
 
 // Обработчик события для кнопки "Кликнуть!"
@@ -143,5 +180,9 @@ consoleButton.addEventListener("click", function() {
     }
 });
 
-// Загружаем игру при старте
+// Загружаем игру и тему при старте
 loadGame();
+loadTheme();
+
+// Обработчик события для кнопки смены темы
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
