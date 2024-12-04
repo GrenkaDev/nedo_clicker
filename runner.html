@@ -38,7 +38,12 @@
             margin: 20px;
         }
 
-        .button {
+        #highScore {
+            font-size: 20px;
+            margin: 20px;
+        }
+
+        .button, select {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -49,8 +54,12 @@
             margin-top: 10px;
         }
 
-        .button:hover {
+        .button:hover, select:hover {
             background-color: #45a049;
+        }
+
+        #letterSelection {
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -59,13 +68,56 @@
         <div id="runner"></div>
     </div>
     <p id="score">Очки: 0</p>
+    <p id="highScore">Максимальный рекорд: 0</p>
+    <div id="letterSelection">
+        <label for="letter">Выберите букву:</label>
+        <select id="letter">
+            <option value="">Выберите букву</option>
+            <!-- Добавьте все буквы здесь -->
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="H">H</option>
+            <option value="I">I</option>
+            <option value="J">J</option>
+            <option value="K">K</option>
+            <option value="L">L</option>
+            <option value="M">M</option>
+            <option value="N">N</option>
+            <option value="O">O</option>
+            <option value="P">P</option>
+            <option value="Q">Q</option>
+            <option value="R">R</option>
+            <option value="S">S</option>
+            <option value="T">T</option>
+            <option value="U">U</option>
+            <option value="V">V</option>
+            <option value="W">W</option>
+            <option value="X">X</option>
+            <option value="Y">Y</option>
+            <option value="Z">Z</option>
+        </select>
+    </div>
+    <button class="button" id="startButton">Начать игру</button>
     <button class="button" id="backButton">Обратно к кликеру</button>
 
     <script>
         let score = 0; 
+        let highScore = localStorage.getItem('highScore') || 0; 
         let isJumping = false; 
         const runner = document.getElementById('runner');
         const gameArea = document.getElementById('gameArea');
+        const scoreElement = document.getElementById('score');
+        const highScoreElement = document.getElementById('highScore');
+        const startButton = document.getElementById('startButton');
+        const letterSelect = document.getElementById('letter');
+
+        // Обновление отображения максимального рекорда
+        highScoreElement.innerText = `Максимальный рекорд: ${highScore}`;
 
         function jump() {
             if (isJumping) return;
@@ -112,9 +164,26 @@
                 } else {
                     score++; // Получаем 1 очко, если не столкнулись с препятствием
                 }
-                document.getElementById('score').innerText = `Очки: ${score}`;
+                scoreElement.innerText = `Очки: ${score}`;
             }, 3000);
         }
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            window.location.href = 'index.html'; // Вернуться на кликер
+        });
+
+        startButton.addEventListener('click', () => {
+            const letterValue = letterSelect.value;
+            if (!letterValue) {
+                alert('Пожалуйста, выберите букву для игры.');
+                return;
+            }
+            score = 0; // Сброс очков
+            scoreElement.innerText = `Очки: ${score}`;
+            startButton.disabled = true; // Отключаем кнопку во время игры
+            letterSelect.disabled = true; // Отключаем выбор буквы
+            setInterval(gameLoop, 2000); // Запуск цикла игры каждые 2 секунды
+        });
 
         document.addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
@@ -122,11 +191,17 @@
             }
         });
 
-        document.getElementById('backButton').addEventListener('click', () => {
-            window.location.href = 'index.html'; // Вернуться на кликер
-        });
+        // Загрузка максимального рекорда
+        function saveHighScore() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+                highScoreElement.innerText = `Максимальный рекорд: ${highScore}`;
+            }
+        }
 
-        setInterval(gameLoop, 2000); // Запуск цикла игры каждые 2 секунды
+        // Сохраняем максимальный рекорд при закрытии игры
+        window.addEventListener('beforeunload', saveHighScore);
     </script>
 </body>
 </html>
