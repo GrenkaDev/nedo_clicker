@@ -27,6 +27,11 @@ body.dark-theme {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.container.dark {
+    background-color: #444; /* Темный фон для контейнера при темной теме */
+    color: #fff; /* Цвет текста для темной темы */
+}
+
 button {
     padding: 10px 20px;
     margin: 10px;
@@ -64,4 +69,17 @@ footer {
     margin-top: 20px; /* Отступ от контейнера */
     font-size: 14px; /* Размер шрифта для информации */
     color: #555; /* Цвет текста */
+}
+
+.console {
+    background-color: #f9f9f9; /* Светлый фон консоли */
+    padding: 10px; 
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: left; /* Выровненный текст влево */
+}
+
+.console.dark {
+    background-color: #444; /* Темный фон консоли */
+    color: #fff; /* Цвет текста для темной темы консоли */
 }
